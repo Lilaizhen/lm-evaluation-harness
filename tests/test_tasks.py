@@ -6,14 +6,12 @@ import pytest
 import lm_eval.tasks as tasks
 from lm_eval.api.task import ConfigurableTask
 
-from .utils import new_tasks
-
+from .utils import new_tasks  
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 task_manager = tasks.TaskManager()
 # Default Task
 TASKS = ["arc_easy"]
-
 
 def task_class():
     global TASKS
@@ -25,11 +23,9 @@ def task_class():
     else:
         return list(task_manager.load_task_or_group(TASKS).values())
 
-
 @pytest.fixture()
 def limit() -> int:
     return 10
-
 
 # Tests
 @pytest.mark.parametrize("task_class", task_class(), ids=lambda x: f"{x.config.task}")
@@ -74,7 +70,7 @@ class TestNewTasks:
             else list(islice(task.validation_docs(), limit))
         )
         _array = [task.doc_to_text(doc) for doc in arr]
-        # space convention; allow txt to have length 0 for perplexity-like tasks since the model tacks an <|endoftext|> on
+        # space convention; allow txt to have length 0 for perplexity-like tasks since the model tacks an  on
         assert all(
             isinstance(x, str) and (x[-1] != " " if len(x) != 0 else True)
             for x in _array
